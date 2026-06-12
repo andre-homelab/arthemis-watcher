@@ -1,0 +1,82 @@
+basePath: /
+definitions:
+  models.AuditLog:
+    properties:
+      duration_ms:
+        type: integer
+      id:
+        type: integer
+      method:
+        type: string
+      path:
+        type: string
+      req_body:
+        type: string
+      status_code:
+        type: integer
+      timestamp:
+        type: string
+      user_id:
+        type: string
+    type: object
+host: localhost:8082
+info:
+  contact: {}
+  description: API service for Arthemis Watcher.
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Arthemis Watcher API
+  version: "1.0"
+paths:
+  /audit/log:
+    post:
+      consumes:
+      - application/json
+      description: Receives an audit log entry and saves it to the database
+      parameters:
+      - description: Audit Log entry payload
+        in: body
+        name: entry
+        required: true
+        schema:
+          $ref: '#/definitions/models.AuditLog'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created audit log entry
+          schema:
+            $ref: '#/definitions/models.AuditLog'
+        "400":
+          description: Invalid request body
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Failed to save to database
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create Audit Log
+      tags:
+      - audit
+  /health:
+    get:
+      description: Evaluates the status of the server and database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successful response containing status, db connection, and timestamp
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Health Check
+      tags:
+      - health
+swagger: "2.0"
